@@ -1,0 +1,31 @@
+		     ______________________________
+
+		      DEPLOYING NATS ON KUBERNETES
+
+			    Waldemar Quevedo
+		     ______________________________
+
+
+Table of Contents
+_________________
+
+1 Deploying NATS on Kubernetes
+
+
+
+
+
+1 Deploying NATS on Kubernetes
+==============================
+
+  This is an example...
+
+  ,----
+  | apiVersion: "nats.io/v1alpha2"
+  | kind: "NatsCluster"
+  | metadata:
+  |   name: "nats-cluster"
+  | spec:
+  |   size: 3
+  |   version: "2.0.0"
+  `----

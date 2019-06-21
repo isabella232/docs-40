@@ -1,0 +1,17 @@
+# -*- mode: org; mode: auto-fill -*- 
+#+TODO:    ONIT HOLD PAUSED TODO | DONE CANCELED
+#+TITLE:   Troubleshooting
+#+startup: showeverything
+
+*** Manual config reload
+
+#+BEGIN_SRC go
+    hosts := []string{
+        "*.ngs-nats-red-mgmt.default.svc",
+        "*.ngs-nats-green-mgmt.default.svc",
+        "*.ngs-nats-blue-mgmt.default.svc",
+        "ngs-nats-red-mgmt",
+        "ngs-nats-green-mgmt",
+        "ngs-nats-blue-mgmt",
+    }
+#+END_SRC

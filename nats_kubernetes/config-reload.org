@@ -1,0 +1,6 @@
+# -*- mode: org; mode: auto-fill -*- 
+#+TODO:    ONIT HOLD PAUSED TODO | DONE CANCELED
+#+TITLE:   Configuration reload
+#+startup: showeverything
+
+One of the main 

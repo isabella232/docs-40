@@ -1,0 +1,7 @@
+# -*- mode: org; mode: auto-fill -*- 
+#+TODO:    ONIT HOLD PAUSED TODO | DONE CANCELED
+#+TITLE:   Troubleshooting
+#+startup: showeverything
+
+*** Port forward
+*** Manual config reload

@@ -1,0 +1,7 @@
+# -*- mode: org; mode: auto-fill -*- 
+#+TODO:    ONIT HOLD PAUSED TODO | DONE CANCELED
+#+TITLE:   Deploying NGS
+#+startup: showeverything
+
+- Recommended to have an external access ip
+- Kubernetes v1.12

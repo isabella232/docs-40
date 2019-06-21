@@ -1,0 +1,7 @@
+# -*- mode: org; mode: auto-fill -*- 
+#+TODO:    ONIT HOLD PAUSED TODO | DONE CANCELED
+#+TITLE:   Graceful updates
+#+startup: showeverything
+
+
+The recommended way of handling updates gracefully for a cluster is

@@ -199,3 +199,17 @@
 * [Client Protocol](nats_protocol/nats-protocol.md)
   * [Developing a Client](nats_protocol/nats-client-dev.md)
 * [NATS Cluster Protocol](nats_protocol/nats-server-protocol.md)
+
+## NATS on Kubernetes
+
+* [Getting started](nats_kubernetes/introduction.md)
+* [Configuration](nats_kubernetes/template.md)
+* [TLS setup](nats_kubernetes/template.md)
+* [Authorization](nats_kubernetes/template.md)
+* [Monitoring](nats_kubernetes/template.md)
+* [External Access setup](nats_kubernetes/template.md)
+* [Deploying NGS](nats_kubernetes/template.md)
+* [Troubleshooting](nats_kubernetes/template.md)
+* [Graceful updates](nats_kubernetes/template.md)
+* [Development](nats_kubernetes/template.md)
+* [FAQ](nats_kubernetes/template.md)

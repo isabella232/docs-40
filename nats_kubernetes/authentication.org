@@ -1,0 +1,12 @@
+# -*- mode: org; mode: auto-fill -*- 
+#+TODO:    ONIT HOLD PAUSED TODO | DONE CANCELED
+#+TITLE:   Authentication and Authorization
+#+startup: showeverything
+
+
+There are multiple ways of setting up authentication and authorization
+in your NATS cluster:
+
+- Using a config file with the credentials
+- Using Service Account bound tokens
+- Using a custom volume 

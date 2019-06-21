@@ -1,0 +1,22 @@
+# -*- mode: org; mode: auto-fill -*- 
+#+TODO:    ONIT HOLD PAUSED TODO | DONE CANCELED
+#+TITLE:   External Access
+#+startup: showeverything
+
+** No Advertise 
+** ExternalIP
+** Using a label
+
+** Misc cloud provider notes
+
+*** On GKE
+
+*** On Digital Ocean
+
+*** On AWS (EKS)
+
+*** On Azure (AKS)
+
+** Load Balancers shortcomings
+
+
