@@ -11,7 +11,7 @@ streams. At a high level, if observability is required, applications need to
 consume messages in the future, need to come consume at their own pace, or
 need all messages, then at-least-once semantics (NATS streaming) makes sense. If
 observation needs to be realtime and the most recent message is the most important,
-the use _At-Most-Once_ delivery semantics with core NATS.
+use _At-Most-Once_ delivery semantics with core NATS.
 
 Just be aware that using an a least once guarantee is the facet of messaging with the highest cost in terms of compute and storage. The NATS Maintainers highly recommend
 a strategy of defaulting to core NATS using a service pattern (request/reply)
