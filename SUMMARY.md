@@ -74,7 +74,7 @@
 
 * [Installing](nats_server/installation.md)
 * [Running](nats_server/running.md)
-  * [Window Service](nats_server/windows_srv.md)
+  * [Windows Service](nats_server/windows_srv.md)
 * [Clients](nats_server/clients.md)
 * [Flags](nats_server/flags.md)
 * [Configuration](nats_server/configuration.md)
