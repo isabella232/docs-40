@@ -139,7 +139,7 @@ It uses a paging mechanism which defaults to 1024 connections.
 | Argument | Values | Description |
 |:---|:---|:---|
 | sort   | (*see sort options*)     | Sorts the results.  Default is connection ID.           |
-| auth   | true, 1, false, 0        | Include username.  Default is false.                    |
+| auth   | true, 1, false, 0        | Include username or account.  Default is false.         |
 | subs   | true, 1, false, 0        | Include subscriptions.  Default is false.               |
 | offset | number > 0               | Pagination offset.  Default is 0.                       |
 | limit  | number > 0               | Number of results to return.  Default is 1024.          |
