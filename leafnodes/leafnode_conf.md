@@ -1,9 +1,9 @@
-## `leafnodes` Configuration Block
+# `leafnodes` Configuration Block
 
 | Property | Description |
 | :------  | :---- |
 | `advertise` | Hostport `<host>:<port>` to advertise to other servers. |
-| `authorization` | Authorization block [**See details below**](#authorization-block). |
+| `authorization` | Authorization block. [**See Authorization Block section below**](#authorization-block). |
 | `host` | Interface where the server will listen for incoming leafnode connections. |
 | `listen` | Combines `host` and `port` as `<host>:<port>` |
 | `no_advertise` | if `true` the leafnode shouldn't be advertised. |
@@ -11,7 +11,7 @@
 | `remotes` | List of `remote` entries specifying servers where leafnode client connection can be made. |
 | `tls` | TLS configuration block (same as other nats-server `tls` configuration). |
 
-#### Authorization Block
+## Authorization Block
 
 | Property | Description |
 | :------  | :---- |
@@ -19,9 +19,9 @@
 | `password` | Password for the user entry. |
 | `account` | Account this Leafnode connection should be bound to. |
 | `timeout` | Maximum number of seconds to wait for Leafnode authentication. |
-| `users` | List of credentials and account to bind Leafnode connections to [**See details below**](#users-block). |
+| `users` | List of credentials and account to bind to Leafnode connections. [**See User Block section below**](#users-block). |
 
-##### Users Block
+### Users Block
 
 | Property | Description |
 | :------  | :---- |
@@ -75,7 +75,7 @@ With the above, a connection without credentials will be bound to the account "T
 If other form of credentials are used (jwt, nkey or other), then the server will attempt to authenticate and if successful associate to the account for that specific user. If the user authentication fails (wrong password, no such user, etc..) the connection will be also rejected.
 
 
-### LeafNode `remotes` Entry Block
+## LeafNode `remotes` Entry Block
 
 | Property | Description |
 | :------  | :---- |
@@ -85,7 +85,7 @@ If other form of credentials are used (jwt, nkey or other), then the server will
 | `credentials` | Credential file for connecting to the leafnode server. |
 | `tls` | A TLS configuration block. Leafnode client will use specified TLS certificates when connecting/authenticating. |
 
-### `tls` Configuration Block
+## `tls` Configuration Block
 
 | Property | Description |
 | :------  | :---- |
