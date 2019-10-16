@@ -2578,7 +2578,7 @@
     
                                 <section class="normal markdown-section">
                                 
-                                <h2 id="leafnodes-configuration-block"><a name="leafnodes-configuration-block" class="plugin-anchor" href="#leafnodes-configuration-block"><i class="fa fa-link" aria-hidden="true"></i></a><code>leafnodes</code> Configuration Block</h2>
+                                <h1 id="leafnodes-configuration-block"><a name="leafnodes-configuration-block" class="plugin-anchor" href="#leafnodes-configuration-block"><i class="fa fa-link" aria-hidden="true"></i></a><code>leafnodes</code> Configuration Block</h1>
 <table>
 <thead>
 <tr>
@@ -2593,7 +2593,7 @@
 </tr>
 <tr>
 <td style="text-align:left"><code>authorization</code></td>
-<td style="text-align:left">Authorization block (same as other nats-server <code>authorization</code> configuration).</td>
+<td style="text-align:left">Authorization block. <a href="#authorization-block"><strong>See Authorization Block section below</strong></a>.</td>
 </tr>
 <tr>
 <td style="text-align:left"><code>host</code></td>
@@ -2621,7 +2621,94 @@
 </tr>
 </tbody>
 </table>
-<h3 id="leafnode-remotes-entry-block"><a name="leafnode-remotes-entry-block" class="plugin-anchor" href="#leafnode-remotes-entry-block"><i class="fa fa-link" aria-hidden="true"></i></a>LeafNode <code>remotes</code> Entry Block</h3>
+<h2 id="authorization-block"><a name="authorization-block" class="plugin-anchor" href="#authorization-block"><i class="fa fa-link" aria-hidden="true"></i></a>Authorization Block</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Property</th>
+<th style="text-align:left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><code>user</code></td>
+<td style="text-align:left">Username for the Leafnode connection.</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>password</code></td>
+<td style="text-align:left">Password for the user entry.</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>account</code></td>
+<td style="text-align:left">Account this Leafnode connection should be bound to.</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>timeout</code></td>
+<td style="text-align:left">Maximum number of seconds to wait for Leafnode authentication.</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>users</code></td>
+<td style="text-align:left">List of credentials and account to bind to Leafnode connections. <a href="#users-block"><strong>See User Block section below</strong></a>.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="users-block"><a name="users-block" class="plugin-anchor" href="#users-block"><i class="fa fa-link" aria-hidden="true"></i></a>Users Block</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Property</th>
+<th style="text-align:left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><code>user</code></td>
+<td style="text-align:left">Username for the Leafnode connection.</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>password</code></td>
+<td style="text-align:left">Password for the user entry.</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>account</code></td>
+<td style="text-align:left">Account this Leafnode connection should be bound to.</td>
+</tr>
+</tbody>
+</table>
+<p>Here are some examples of using basic user/password authentication for Leafnodes:</p>
+<p>Singleton mode:</p>
+<pre class="language-"><code>leafnodes {
+  port: ...
+  authorization {
+    user: leaf
+    password: secret
+    account: TheAccount
+  }
+}
+</code></pre><p>With above configuration, if a soliciting server creates a Leafnode connection with url: <code>nats://leaf:secret@host:port</code>, then the accepting server will bind the leafnode connection to the account &quot;TheAccount&quot;. This account need to exist otherwise the connection will be rejected.</p>
+<p>Multi-users mode:</p>
+<pre class="language-"><code>leafnodes {
+  port: ...
+  authorization {
+    users = [
+      {user: leaf1, password: secret, account: account1}
+      {user: leaf2, password: secret, account: account2}
+    ]
+  }
+}
+</code></pre><p>With the above, if a server connects using <code>leaf1:secret@host:port</code>, then the accepting server will bind the connection to account <code>account1</code>.
+If using <code>leaf2</code> user, then the accepting server will bind to connection to <code>account2</code>.</p>
+<p>If username/password (either singleton or multi-users) is defined, then the connecting server MUST provide the proper credentials otherwise the connection will be rejected.</p>
+<p>If no username/password is provided, it is still possible to provide the account the connection should be associated with:</p>
+<pre class="language-"><code>leafnodes {
+  port: ...
+  authorization {
+    account: TheAccount
+  }
+}
+</code></pre><p>With the above, a connection without credentials will be bound to the account &quot;TheAccount&quot;.</p>
+<p>If other form of credentials are used (jwt, nkey or other), then the server will attempt to authenticate and if successful associate to the account for that specific user. If the user authentication fails (wrong password, no such user, etc..) the connection will be also rejected.</p>
+<h2 id="leafnode-remotes-entry-block"><a name="leafnode-remotes-entry-block" class="plugin-anchor" href="#leafnode-remotes-entry-block"><i class="fa fa-link" aria-hidden="true"></i></a>LeafNode <code>remotes</code> Entry Block</h2>
 <table>
 <thead>
 <tr>
@@ -2652,7 +2739,7 @@
 </tr>
 </tbody>
 </table>
-<h3 id="tls-configuration-block"><a name="tls-configuration-block" class="plugin-anchor" href="#tls-configuration-block"><i class="fa fa-link" aria-hidden="true"></i></a><code>tls</code> Configuration Block</h3>
+<h2 id="tls-configuration-block"><a name="tls-configuration-block" class="plugin-anchor" href="#tls-configuration-block"><i class="fa fa-link" aria-hidden="true"></i></a><code>tls</code> Configuration Block</h2>
 <table>
 <thead>
 <tr>
@@ -2742,7 +2829,7 @@
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Configuration","level":"4.5.4.1","depth":3,"next":{"title":"Logging","level":"4.5.5","depth":2,"path":"nats_server/logging.md","ref":"nats_server/logging.md","articles":[]},"previous":{"title":"Leaf Nodes","level":"4.5.4","depth":2,"path":"leafnodes/README.md","ref":"leafnodes/README.md","articles":[{"title":"Configuration","level":"4.5.4.1","depth":3,"path":"leafnodes/leafnode_conf.md","ref":"leafnodes/leafnode_conf.md","articles":[]}]},"dir":"ltr"},"config":{"plugins":["prism","-sharing","-highlight","include-html","toggle-chapters","anchors","edit-link"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"prism":{"lang":{"ascii":"markup","text":"markup"}},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"include-html":{},"fontsettings":{"theme":"white","family":"sans","size":2},"edit-link":{"label":"edit","base":"https://github.com/nats-io/docs/edit/master"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"anchors":{},"toggle-chapters":{}},"theme":"default","author":"The NATS Maintainers","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"NATS","gitbook":"*","description":"Administrative, developer and conceptual documentation for the NATS messaging system."},"file":{"path":"leafnodes/leafnode_conf.md","mtime":"2019-09-23T22:49:18.484Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2019-10-14T16:43:34.309Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"Configuration","level":"4.5.4.1","depth":3,"next":{"title":"Logging","level":"4.5.5","depth":2,"path":"nats_server/logging.md","ref":"nats_server/logging.md","articles":[]},"previous":{"title":"Leaf Nodes","level":"4.5.4","depth":2,"path":"leafnodes/README.md","ref":"leafnodes/README.md","articles":[{"title":"Configuration","level":"4.5.4.1","depth":3,"path":"leafnodes/leafnode_conf.md","ref":"leafnodes/leafnode_conf.md","articles":[]}]},"dir":"ltr"},"config":{"plugins":["prism","-sharing","-highlight","include-html","toggle-chapters","anchors","edit-link"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"prism":{"lang":{"ascii":"markup","text":"markup"}},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"include-html":{},"fontsettings":{"theme":"white","family":"sans","size":2},"edit-link":{"label":"edit","base":"https://github.com/nats-io/docs/edit/master"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"anchors":{},"toggle-chapters":{}},"theme":"default","author":"The NATS Maintainers","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"NATS","gitbook":"*","description":"Administrative, developer and conceptual documentation for the NATS messaging system."},"file":{"path":"leafnodes/leafnode_conf.md","mtime":"2019-10-16T20:01:34.469Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2019-10-16T20:01:54.942Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>
