@@ -2583,10 +2583,10 @@
 <p><a href="https://synadia.com" target="_blank">Synadia</a> actively maintains and supports the NATS server Docker image.</p>
 <h3 id="usage"><a name="usage" class="plugin-anchor" href="#usage"><i class="fa fa-link" aria-hidden="true"></i></a>Usage</h3>
 <p>To use the Docker container image, install Docker and pull the public image:</p>
-<pre class="language-"><code class="lang-sh"><span class="token operator">&gt;</span> docker pull nats
+<pre class="language-"><code class="lang-sh">docker pull nats
 </code></pre>
 <p>Run the NATS server image:</p>
-<pre class="language-"><code class="lang-sh"><span class="token operator">&gt;</span> docker run -d --name nats-main nats
+<pre class="language-"><code class="lang-sh">docker run nats
 </code></pre>
 <p>By default the NATS server exposes multiple ports:</p>
 <ul>
@@ -2595,170 +2595,87 @@
 <li>6222 is a routing port for clustering.</li>
 <li>Use -p or -P to customize.</li>
 </ul>
-<p>For example:</p>
-<pre class="language-"><code class="lang-sh">$ docker run -d --name nats-main nats
-<span class="token punctuation">[</span>INF<span class="token punctuation">]</span> Starting nats-server version <span class="token number">0.6</span>.6
-<span class="token punctuation">[</span>INF<span class="token punctuation">]</span> Starting http monitor on port <span class="token number">8222</span>
+<h3 id="creating-a-nats-cluster"><a name="creating-a-nats-cluster" class="plugin-anchor" href="#creating-a-nats-cluster"><i class="fa fa-link" aria-hidden="true"></i></a>Creating a NATS Cluster</h3>
+<p>First run a server with the ports exposed on a <code>docker network</code>:</p>
+<pre class="language-"><code class="lang-sh">$ docker network create nats
+</code></pre>
+<pre class="language-"><code class="lang-sh">docker run --name nats --network nats --rm -p <span class="token number">4222</span>:4222 -p <span class="token number">8222</span>:8222 nats
+<span class="token punctuation">[</span>INF<span class="token punctuation">]</span> Starting nats-server version <span class="token number">2.1</span>.0
+<span class="token punctuation">[</span>INF<span class="token punctuation">]</span> Git commit <span class="token punctuation">[</span>1cc5ae0<span class="token punctuation">]</span>
+<span class="token punctuation">[</span>INF<span class="token punctuation">]</span> Starting http monitor on <span class="token number">0.0</span>.0.0:8222
+<span class="token punctuation">[</span>INF<span class="token punctuation">]</span> Listening <span class="token keyword">for</span> client connections on <span class="token number">0.0</span>.0.0:4222
+<span class="token punctuation">[</span>INF<span class="token punctuation">]</span> Server <span class="token function">id</span> is NDHWPPFNP2ASLPHXTMUU63NKUTZIKPJPMVBAHBAWJVAOSJG4QPXVRWL3
+<span class="token punctuation">[</span>INF<span class="token punctuation">]</span> Server is ready
 <span class="token punctuation">[</span>INF<span class="token punctuation">]</span> Listening <span class="token keyword">for</span> route connections on <span class="token number">0.0</span>.0.0:6222
-<span class="token punctuation">[</span>INF<span class="token punctuation">]</span> Listening <span class="token keyword">for</span> client connections on <span class="token number">0.0</span>.0.0:4222
-<span class="token punctuation">[</span>INF<span class="token punctuation">]</span> nats-server is ready
 </code></pre>
-<p>To run with the ports exposed on the host:</p>
-<pre class="language-"><code class="lang-sh"><span class="token operator">&gt;</span> docker run -d -p <span class="token number">4222</span>:4222 -p <span class="token number">6222</span>:6222 -p <span class="token number">8222</span>:8222 --name nats-main nats
-</code></pre>
-<p>To run a second server and cluster them together:</p>
-<pre class="language-"><code class="lang-sh"><span class="token operator">&gt;</span> docker run -d --name<span class="token operator">=</span>nats-2 --link nats-main nats --routes<span class="token operator">=</span>nats-route://ruser:T0pS3cr3t@nats-main:6222
-</code></pre>
-<p><strong>NOTE</strong> Since the Docker image protects routes using credentials we need to provide them above. Extracted <a href="https://github.com/nats-io/nats-docker/blob/master/amd64/nats-server.conf#L16-L20" target="_blank">from Docker image configuration</a></p>
-<pre class="language-"><code class="lang-ascii"># Routes are protected, so need to use them with --routes flag
-# e.g. --routes=nats-route://ruser:T0pS3cr3t@otherdockerhost:6222
-authorization {
-  user: ruser
-  password: T0pS3cr3t
-  timeout: 2
-}
-</code></pre>
-<p>To verify the routes are connected:</p>
-<pre class="language-"><code class="lang-sh">$ docker run -d --name<span class="token operator">=</span>nats-2 --link nats-main nats --routes<span class="token operator">=</span>nats-route://ruser:T0pS3cr3t@nats-main:6222 -DV
-<span class="token punctuation">[</span>INF<span class="token punctuation">]</span> Starting nats-server version <span class="token number">2.0</span>.0
-<span class="token punctuation">[</span>INF<span class="token punctuation">]</span> Starting http monitor on port <span class="token number">8222</span>
-<span class="token punctuation">[</span>INF<span class="token punctuation">]</span> Listening <span class="token keyword">for</span> route connections on :6222
-<span class="token punctuation">[</span>INF<span class="token punctuation">]</span> Listening <span class="token keyword">for</span> client connections on <span class="token number">0.0</span>.0.0:4222
-<span class="token punctuation">[</span>INF<span class="token punctuation">]</span> nats-server is ready
-<span class="token punctuation">[</span>DBG<span class="token punctuation">]</span> Trying to connect to route on nats-main:6222
-<span class="token punctuation">[</span>DBG<span class="token punctuation">]</span> <span class="token number">172.17</span>.0.52:6222 - rid:1 - Route connection created
-<span class="token punctuation">[</span>DBG<span class="token punctuation">]</span> <span class="token number">172.17</span>.0.52:6222 - rid:1 - Route connect msg sent
-<span class="token punctuation">[</span>DBG<span class="token punctuation">]</span> <span class="token number">172.17</span>.0.52:6222 - rid:1 - Registering remote route <span class="token string">&quot;ee35d227433a738c729f9422a59667bb&quot;</span>
-<span class="token punctuation">[</span>DBG<span class="token punctuation">]</span> <span class="token number">172.17</span>.0.52:6222 - rid:1 - Route sent <span class="token builtin class-name">local</span> subscriptions
-</code></pre>
-<h2 id="clustering-with-docker"><a name="clustering-with-docker" class="plugin-anchor" href="#clustering-with-docker"><i class="fa fa-link" aria-hidden="true"></i></a>Clustering With Docker</h2>
-<p>Below is are a couple examples of how to setup nats-server cluster using Docker. We put 3 different configurations (one per nats-server server) under a folder named conf as follows:</p>
-<pre class="language-"><code class="lang-ascii">|-- conf
-    |-- nats-server-A.conf
-    |-- nats-server-B.conf
-    |-- nats-server-C.conf
-</code></pre>
-<p>Each one of those files have the following content below: (Here I am using ip 192.168.59.103 as an example, so just replace with the proper ip from your server)</p>
-<h3 id="example-1-setting-up-a-cluster-on-3-different-servers-provisioned-beforehand"><a name="example-1-setting-up-a-cluster-on-3-different-servers-provisioned-beforehand" class="plugin-anchor" href="#example-1-setting-up-a-cluster-on-3-different-servers-provisioned-beforehand"><i class="fa fa-link" aria-hidden="true"></i></a>Example 1: Setting up a cluster on 3 different servers provisioned beforehand</h3>
-<p>In this example, the three servers are started with config files that know about the other servers.</p>
-<h4 id="nats-server-a"><a name="nats-server-a" class="plugin-anchor" href="#nats-server-a"><i class="fa fa-link" aria-hidden="true"></i></a>nats-server-A</h4>
-<pre class="language-"><code class="lang-ascii"># Cluster Server A
+<pre class="language-"><code>
+Next, start another couple of servers and point them to the seed server to make them form a cluster:
 
-port: 7222
-
-cluster {
-  host: &apos;0.0.0.0&apos;
-  port: 7244
-
-  routes = [
-    nats-route://192.168.59.103:7246
-    nats-route://192.168.59.103:7248
-  ]
-}
-</code></pre>
-<h4 id="nats-server-b"><a name="nats-server-b" class="plugin-anchor" href="#nats-server-b"><i class="fa fa-link" aria-hidden="true"></i></a>nats-server-B</h4>
-<pre class="language-"><code class="lang-ascii"># Cluster Server B
-
-port: 8222
-
-cluster {
-  host: &apos;0.0.0.0&apos;
-  port: 7246
-
-  routes = [
-    nats-route://192.168.59.103:7244
-    nats-route://192.168.59.103:7248
-  ]
-}
-</code></pre>
-<h4 id="nats-server-c"><a name="nats-server-c" class="plugin-anchor" href="#nats-server-c"><i class="fa fa-link" aria-hidden="true"></i></a>nats-server-C</h4>
-<pre class="language-"><code class="lang-ascii"># Cluster Server C
-
-port: 9222
-
-cluster {
-  host: &apos;0.0.0.0&apos;
-  port: 7248
-
-  routes = [
-    nats-route://192.168.59.103:7244
-    nats-route://192.168.59.103:7246
-  ]
-}
-</code></pre>
-<p>To start the containers, on each one of your servers, you should be able to start the nats-server image as follows:</p>
-<pre class="language-"><code class="lang-sh">docker run -it -p <span class="token number">0.0</span>.0.0:7222:7222 -p <span class="token number">0.0</span>.0.0:7244:7244 --rm -v <span class="token variable"><span class="token variable">$(</span><span class="token builtin class-name">pwd</span><span class="token variable">)</span></span>/conf/nats-server-A.conf:/tmp/cluster.conf nats -c /tmp/cluster.conf -p <span class="token number">7222</span> -D -V
-</code></pre>
-<pre class="language-"><code>docker run -it -p 0.0.0.0:8222:8222 -p 0.0.0.0:7246:7246 --rm -v $(pwd)/conf/nats-server-B.conf:/tmp/cluster.conf nats -c /tmp/cluster.conf -p 8222 -D -V
-</code></pre><pre class="language-"><code>docker run -it -p 0.0.0.0:9222:9222 -p 0.0.0.0:7248:7248 --rm -v $(pwd)/conf/nats-server-C.conf:/tmp/cluster.conf nats -c /tmp/cluster.conf -p 9222 -D -V
-</code></pre><h3 id="example-2-setting-a-nats-server-cluster-one-by-one"><a name="example-2-setting-a-nats-server-cluster-one-by-one" class="plugin-anchor" href="#example-2-setting-a-nats-server-cluster-one-by-one"><i class="fa fa-link" aria-hidden="true"></i></a>Example 2: Setting a nats-server cluster one by one</h3>
-<p>In this scenario:</p>
-<ul>
-<li>We bring up A and get its ip (nats-route://192.168.59.103:7244)</li>
-<li>Then create B and then use address of A in its configuration.</li>
-<li>Get the address of B nats-route://192.168.59.104:7246 and create C and use the addresses of A and B.</li>
-</ul>
-<p>First, we create the Node A and start up a nats-server server with the following config:</p>
-<pre class="language-"><code class="lang-ascii"># Cluster Server A
-
-port: 4222
-
-cluster {
-  host: &apos;0.0.0.0&apos;
-  port: 7244
-
-}
-</code></pre>
-<pre class="language-"><code class="lang-sh">docker run -it -p <span class="token number">0.0</span>.0.0:4222:4222 -p <span class="token number">0.0</span>.0.0:7244:7244 --rm -v <span class="token variable"><span class="token variable">$(</span><span class="token builtin class-name">pwd</span><span class="token variable">)</span></span>/conf/nats-server-A.conf:/tmp/cluster.conf nats -c /tmp/cluster.conf -p <span class="token number">4222</span> -D -V
-</code></pre>
-<p>Then we proceed to create the next node. We realize that the first node has ip:port as <code>192.168.59.103:7244</code> so we add this to the routes configuration as follows:</p>
-<pre class="language-"><code class="lang-ascii"># Cluster Server B
-
-port: 4222
-
-cluster {
-  host: &apos;0.0.0.0&apos;
-  port: 7244
-
-  routes = [
-    nats-route://192.168.59.103:7244
-  ]
-}
-</code></pre>
-<p>Then start server B:</p>
-<pre class="language-"><code class="lang-sh">docker run -it -p <span class="token number">0.0</span>.0.0:4222:4222 -p <span class="token number">0.0</span>.0.0:7244:7244 --rm -v <span class="token variable"><span class="token variable">$(</span><span class="token builtin class-name">pwd</span><span class="token variable">)</span></span>/conf/nats-server-B.conf:/tmp/cluster.conf nats -c /tmp/cluster.conf -p <span class="token number">4222</span> -D -V
-</code></pre>
-<p>Finally, we create another Node C. We now know the routes of A and B so we can add it to its configuration:</p>
-<pre class="language-"><code class="lang-ascii"># Cluster Server C
-
-port: 4222
-
-cluster {
-  host: &apos;0.0.0.0&apos;
-  port: 7244
-
-  routes = [
-    nats-route://192.168.59.103:7244
-    nats-route://192.168.59.104:7244
-  ]
-}
-</code></pre>
-<p>Then start it:</p>
-<pre class="language-"><code class="lang-sh">docker run -it -p <span class="token number">0.0</span>.0.0:4222:4222 -p <span class="token number">0.0</span>.0.0:7244:7244 --rm -v <span class="token variable"><span class="token variable">$(</span><span class="token builtin class-name">pwd</span><span class="token variable">)</span></span>/conf/nats-server-C.conf:/tmp/cluster.conf nats -c /tmp/cluster.conf -p <span class="token number">9222</span> -D -V
+```sh
+docker run --name nats-1 --network nats --rm nats --cluster nats://0.0.0.0:6222 --routes=nats://ruser:T0pS3cr3t@nats:6222
+docker run --name nats-2 --network nats --rm nats --cluster nats://0.0.0.0:6222 --routes=nats://ruser:T0pS3cr3t@nats:6222
+</code></pre><p><strong>NOTE</strong> Since the Docker image protects routes using credentials we need to provide them above. Extracted <a href="https://github.com/nats-io/nats-docker/blob/6fb8c05311bb4d1554390f66abb0a5ebef1e1c9d/2.1.0/scratch/amd64/nats-server.conf#L13-L19" target="_blank">from Docker image configuration</a></p>
+<p>To verify the routes are connected, you can make a request to the monitoring endpoint on <code>/routez</code> as follows and confirm that there are now 2 routes:</p>
+<pre class="language-"><code class="lang-sh"><span class="token function">curl</span> http://127.0.0.1:8222/routez
+<span class="token punctuation">{</span>
+  <span class="token string">&quot;server_id&quot;</span><span class="token builtin class-name">:</span> <span class="token string">&quot;ND34PZ64QLLJKSU5SLSWRS5EUXEKNHW5BUVLCNFWA56R4D7XKDYWJFP7&quot;</span>,
+  <span class="token string">&quot;now&quot;</span><span class="token builtin class-name">:</span> <span class="token string">&quot;2019-10-17T21:29:38.126871819Z&quot;</span>,
+  <span class="token string">&quot;num_routes&quot;</span><span class="token builtin class-name">:</span> <span class="token number">2</span>,
+  <span class="token string">&quot;routes&quot;</span><span class="token builtin class-name">:</span> <span class="token punctuation">[</span>
+    <span class="token punctuation">{</span>
+      <span class="token string">&quot;rid&quot;</span><span class="token builtin class-name">:</span> <span class="token number">7</span>,
+      <span class="token string">&quot;remote_id&quot;</span><span class="token builtin class-name">:</span> <span class="token string">&quot;NDF4PMDKSKIZBYHUU5R7NA5KXNXLTKHVLN6ALBLQPAWTJKRAWJVPN4HA&quot;</span>,
+      <span class="token string">&quot;did_solicit&quot;</span><span class="token builtin class-name">:</span> false,
+      <span class="token string">&quot;is_configured&quot;</span><span class="token builtin class-name">:</span> false,
+      <span class="token string">&quot;ip&quot;</span><span class="token builtin class-name">:</span> <span class="token string">&quot;172.17.0.3&quot;</span>,
+      <span class="token string">&quot;port&quot;</span><span class="token builtin class-name">:</span> <span class="token number">59810</span>,
+      <span class="token string">&quot;pending_size&quot;</span><span class="token builtin class-name">:</span> <span class="token number">0</span>,
+      <span class="token string">&quot;rtt&quot;</span><span class="token builtin class-name">:</span> <span class="token string">&quot;561&#xB5;s&quot;</span>,
+      <span class="token string">&quot;in_msgs&quot;</span><span class="token builtin class-name">:</span> <span class="token number">0</span>,
+      <span class="token string">&quot;out_msgs&quot;</span><span class="token builtin class-name">:</span> <span class="token number">0</span>,
+      <span class="token string">&quot;in_bytes&quot;</span><span class="token builtin class-name">:</span> <span class="token number">0</span>,
+      <span class="token string">&quot;out_bytes&quot;</span><span class="token builtin class-name">:</span> <span class="token number">0</span>,
+      <span class="token string">&quot;subscriptions&quot;</span><span class="token builtin class-name">:</span> <span class="token number">0</span>
+    <span class="token punctuation">}</span>,
+    <span class="token punctuation">{</span>
+      <span class="token string">&quot;rid&quot;</span><span class="token builtin class-name">:</span> <span class="token number">8</span>,
+      <span class="token string">&quot;remote_id&quot;</span><span class="token builtin class-name">:</span> <span class="token string">&quot;ND6P52R5PASBYXK2MK44P6BYV7Q7PZEMTZJ5O5K7WXF4F54UD3EKVBSC&quot;</span>,
+      <span class="token string">&quot;did_solicit&quot;</span><span class="token builtin class-name">:</span> false,
+      <span class="token string">&quot;is_configured&quot;</span><span class="token builtin class-name">:</span> false,
+      <span class="token string">&quot;ip&quot;</span><span class="token builtin class-name">:</span> <span class="token string">&quot;172.17.0.4&quot;</span>,
+      <span class="token string">&quot;port&quot;</span><span class="token builtin class-name">:</span> <span class="token number">37882</span>,
+      <span class="token string">&quot;pending_size&quot;</span><span class="token builtin class-name">:</span> <span class="token number">0</span>,
+      <span class="token string">&quot;rtt&quot;</span><span class="token builtin class-name">:</span> <span class="token string">&quot;772&#xB5;s&quot;</span>,
+      <span class="token string">&quot;in_msgs&quot;</span><span class="token builtin class-name">:</span> <span class="token number">0</span>,
+      <span class="token string">&quot;out_msgs&quot;</span><span class="token builtin class-name">:</span> <span class="token number">0</span>,
+      <span class="token string">&quot;in_bytes&quot;</span><span class="token builtin class-name">:</span> <span class="token number">0</span>,
+      <span class="token string">&quot;out_bytes&quot;</span><span class="token builtin class-name">:</span> <span class="token number">0</span>,
+      <span class="token string">&quot;subscriptions&quot;</span><span class="token builtin class-name">:</span> <span class="token number">0</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">]</span>
+<span class="token punctuation">}</span>
 </code></pre>
 <h3 id="testing-the-clusters"><a name="testing-the-clusters" class="plugin-anchor" href="#testing-the-clusters"><i class="fa fa-link" aria-hidden="true"></i></a>Testing the Clusters</h3>
-<p>Now, the following should work: make a subscription to Node A then publish to Node C. You should be able to to receive the message without problems.</p>
-<pre class="language-"><code class="lang-sh">nats-sub -s <span class="token string">&quot;nats://192.168.59.103:7222&quot;</span> hello <span class="token operator">&amp;</span>
+<p>Now, the following should work: make a subscription on one of the nodes and publish it from another node. You should be able to receive the message without problems.</p>
+<pre class="language-"><code class="lang-sh">$ docker run --network nats --rm -it synadia/nats-box
+~ <span class="token comment"># nats-sub -s nats://nats:4222 hello &amp;</span>
+Listening on <span class="token punctuation">[</span>hello<span class="token punctuation">]</span>
 
-nats-pub -s <span class="token string">&quot;nats://192.168.59.105:7222&quot;</span> hello world
+~ <span class="token comment"># nats-pub -s &quot;nats://nats-1:4222&quot; hello first</span>
+~ <span class="token comment"># nats-pub -s &quot;nats://nats-2:4222&quot; hello second</span>
+<span class="token punctuation">[</span><span class="token comment">#1] Received on [hello]: &apos;first&apos;</span>
+<span class="token punctuation">[</span><span class="token comment">#2] Received on [hello]: &apos;second&apos;</span>
+</code></pre>
+<p>Also stopping the seed node to which the subscription was done, should trigger an automatic failover to the other nodes:</p>
+<pre class="language-"><code class="lang-sh">$ docker stop nats
 
-<span class="token punctuation">[</span><span class="token comment">#1] Received on [hello] : &apos;world&apos;</span>
-
-<span class="token comment"># nats-server on Node C logs:</span>
-<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span> <span class="token number">2015</span>/06/23 05:20:31.100032 <span class="token punctuation">[</span>TRC<span class="token punctuation">]</span> <span class="token number">192.168</span>.59.103:7244 - rid:2 - <span class="token operator">&lt;&lt;-</span> <span class="token punctuation">[</span>MSG hello RSID:8:2 <span class="token number">5</span><span class="token punctuation">]</span>
-
-<span class="token comment"># nats-server on Node A logs:</span>
-<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span> <span class="token number">2015</span>/06/23 05:20:31.100600 <span class="token punctuation">[</span>TRC<span class="token punctuation">]</span> <span class="token number">10.0</span>.2.2:51007 - cid:8 - <span class="token operator">&lt;&lt;-</span> <span class="token punctuation">[</span>MSG hello <span class="token number">2</span> <span class="token number">5</span><span class="token punctuation">]</span>
+<span class="token punctuation">..</span>. 
+Disconnected: will attempt reconnects <span class="token keyword">for</span> 10m
+Reconnected <span class="token punctuation">[</span>nats://172.17.0.4:4222<span class="token punctuation">]</span>
+</code></pre>
+<p>Publishing again will continue to work after the reconnection:</p>
+<pre class="language-"><code class="lang-sh">~ <span class="token comment"># nats-pub -s &quot;nats://nats-1:4222&quot; hello again</span>
+~ <span class="token comment"># nats-pub -s &quot;nats://nats-2:4222&quot; hello again</span>
 </code></pre>
 <h2 id="tutorial"><a name="tutorial" class="plugin-anchor" href="#tutorial"><i class="fa fa-link" aria-hidden="true"></i></a>Tutorial</h2>
 <p>See the <a href="nats-docker-tutorial.html">NATS Docker tutorial</a> for more instructions on using the NATS server Docker image.</p>
@@ -2805,7 +2722,7 @@ nats-pub -s <span class="token string">&quot;nats://192.168.59.105:7222&quot;</s
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"NATS and Docker","level":"4.7","depth":1,"next":{"title":"Tutorial","level":"4.7.1","depth":2,"path":"nats_docker/nats-docker-tutorial.md","ref":"nats_docker/nats-docker-tutorial.md","articles":[]},"previous":{"title":"Configuration","level":"4.6.4.1","depth":3,"path":"sys_accounts/sys_accounts.md","ref":"sys_accounts/sys_accounts.md","articles":[]},"dir":"ltr"},"config":{"plugins":["prism","-sharing","-highlight","include-html","toggle-chapters","anchors","edit-link"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"prism":{"lang":{"ascii":"markup","text":"markup"}},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"include-html":{},"fontsettings":{"theme":"white","family":"sans","size":2},"edit-link":{"label":"edit","base":"https://github.com/nats-io/docs/edit/master"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"anchors":{},"toggle-chapters":{}},"theme":"default","author":"The NATS Maintainers","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"NATS","gitbook":"*","description":"Administrative, developer and conceptual documentation for the NATS messaging system."},"file":{"path":"nats_docker/README.md","mtime":"2019-10-14T16:42:54.818Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2019-10-16T20:01:54.942Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"NATS and Docker","level":"4.7","depth":1,"next":{"title":"Tutorial","level":"4.7.1","depth":2,"path":"nats_docker/nats-docker-tutorial.md","ref":"nats_docker/nats-docker-tutorial.md","articles":[]},"previous":{"title":"Configuration","level":"4.6.4.1","depth":3,"path":"sys_accounts/sys_accounts.md","ref":"sys_accounts/sys_accounts.md","articles":[]},"dir":"ltr"},"config":{"plugins":["prism","-sharing","-highlight","include-html","toggle-chapters","anchors","edit-link"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"prism":{"lang":{"ascii":"markup","text":"markup"}},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"include-html":{},"fontsettings":{"theme":"white","family":"sans","size":2},"edit-link":{"label":"edit","base":"https://github.com/nats-io/docs/edit/master"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"anchors":{},"toggle-chapters":{}},"theme":"default","author":"The NATS Maintainers","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"NATS","gitbook":"*","description":"Administrative, developer and conceptual documentation for the NATS messaging system."},"file":{"path":"nats_docker/README.md","mtime":"2019-10-18T14:36:34.138Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2019-10-18T14:47:06.207Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>
