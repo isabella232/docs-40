@@ -62,7 +62,7 @@ Success! - added operator "Test"
 
 With the above incantation, the tool generated an NKEY for the operator, stored the private key safely in `~/.nkeys/Test/Test.nk`. The file contains a single line, with the seed value for the NKEY.
 
- > You can tell the key is a seed if it starts with the letter `S`. The type of the key is will be the second letter an `O`, `A` or `U` for _Operator_, _Account_ or _User_. If the key does not start with an `S` you have instead a public key.
+ > You can tell the key is a seed if it starts with the letter `S`. The type of the key is the second letter - an `O`, `A` or `U` for _Operator_, _Account_ or _User_. If the key does not start with an `S` you have instead a public key.
 
 The tool also created a JWT with all default settings for the operator test, and stored it in `~/.nsc/nats/Test/Test.jwt`. The `~/.nsc/nats/Test` directory will also contain a directory where accounts related to this operator will live.
 
@@ -182,7 +182,7 @@ Let’s put all of this together, and create a simple server configuration that 
 
 To configure a server to use accounts you need an _account resolver_. An account resolver exposes a URL where a nats-server can query for JWTs belonging to an account.
 
-A simple built-in resolver is the `MEMORY` resolver which simply statically maps account public keys to an account JWT in the server’s configuration file. It is somewhat easier to configure because it doesn’t require another moving part, but fails provide the needed experience of setting up an account server. Let’s setup an _Account Server_.
+A simple built-in resolver is the `MEMORY` resolver which simply statically maps account public keys to an account JWT in the server’s configuration file. It is somewhat easier to configure because it doesn’t require another moving part, but fails to provide the needed experience of setting up an account server. Let’s setup an _Account Server_.
 
 Installing the Account Server
 
