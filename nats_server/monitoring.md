@@ -168,9 +168,10 @@ It uses a paging mechanism which defaults to 1024 connections.
 
 #### Examples
 
-Get up to 1024 connections: <a href="http://demo.nats.io:8222/connz" target="_blank">http://demo.nats.io:8222/connz</a>
 
-You can filter by using `auth=1` and including username and when configured account, other than the default global account <a href="http://demo.nats.io:8222/connz?auth=1&user=ivan" target="_blank">http://demo.nats.io:8222/connz?auth=1&user=ivan</a>
+You can filter using `auth=1` by username or account if multiple accounts are utilized.
+
+Get up to 1024 connections: <a href="http://demo.nats.io:8222/connz" target="_blank">http://demo.nats.io:8222/connz</a>
 
 Control limit and offset: <a href="http://demo.nats.io:8222/connz?limit=16&offset=128" target="_blank">http://demo.nats.io:8222/connz?limit=16&offset=128</a>.
 
