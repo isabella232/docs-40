@@ -147,3 +147,12 @@ how `foo.bar.>` is indented compared to `foo.>` to show the inheritance.
 [INF] STREAM:  |-> Bytes                  1.00 KB
 [INF] STREAM: -----------------------------------
 ```
+
+## Limits are retroactive
+
+Suppose that you have set a channel limit to hold at most 100 messages, and the channel currently holds 72 messages.
+The server is stopped and the message limit for this channel is lowered to 50 messages, then the server is restarted.
+
+On startup, the server will apply the store limits, which means that this channel will now hold the maximum number of messages (50) and the 22 oldest messages will be removed due to the channel limit.
+
+We strongly recommend not raising the limit to the higher limit if messages have been removed in the previous step because those removed messages may or may not become available again depending on the store implementation or if running in clustering mode or not.
