@@ -25,6 +25,7 @@
 * [Does NATS support replay/redelivery of historical data?](#does-nats-support-replayredelivery-of-historical-data)
 * [How do I gracefully shut down an asynchronous subscriber?](#how-do-i-gracefully-shut-down-an-asynchronous-subscriber)
 * [How do I create subjects?](#how-do-i-create-subjects)
+* [Does adding a “max_age” to a “channel” for NATS streaming server connected to a SQL store, retroactively delete messages?](#does-adding-a-maxage-to-a-channel-for-nats-streaming-server-connected-to-a-sql-store-retroactively-delete-messages)
 
 ## General
 
@@ -139,3 +140,7 @@ To gracefully shutdown an asynchronous subscriber so that any outstanding MsgHan
 ### How do I create subjects?
 
 Subjects are created and pruned \(deleted\) dynamically based on interest \(subscriptions\). This means that a subject does not exist in a NATS cluster until a client subscribes to it, and the subject goes away after the last subscribing client unsubscribes from that subject.
+
+### Does adding a "max_age" to a "channel" for NATS streaming server connected to a SQL store, retroactively delete messages?
+
+Yes, any channel limit will be applied on startup. For more information, see [Store Limits](/nats_streaming/configuring/storelimits.md#limits-are-retroactive).
