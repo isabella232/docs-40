@@ -1,3 +1,7 @@
+# :warning: This repository has been deprecated
+
+This repository has been deprecated and will be archived in the near future.  Current documentation can be found in the [nats.docs](https://github.com/nats-io/nats.docs) repository.
+
 
 <a href="https://nats.io"><img src="nats-horizontal-color.png" width="350" height="90" title="NATS Logo">
 </a>
