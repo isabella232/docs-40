@@ -109,6 +109,7 @@ authorization: {
 | `host` | Host for client connections |
 | [`http_port`](monitoring.md) | http port for server monitoring |
 | [`https_port`](monitoring.md) | https port for server monitoring |
+| [`http_base_path`](monitoring.md) | base path for monitoring endpoints, default is "/" |
 | [`leafnode`](/leafnodes/leafnode_conf.md) | Leafnode configuration map |
 | `listen`   | Host/port for client connections |
 | `max_connections` | Maximum number of active client connections |
