@@ -58,3 +58,21 @@ tls: {
   timeout: 0.0001
 }
 ```
+
+### Certificate Authorities
+
+The `ca_file` file should contain one or more Certificate Authorities in PEM
+format, in a bundle.  This is a common format.
+
+When a certificate is issued, it is often accompanied by a copy of the
+intermediate certificate used to issue it.  This is useful for validating that
+certificate.  It is not necessarily a good choice as the only CA suitable for
+use in verifying other certificates a server may see.
+
+Do consider though that organizations issuing certificates will change the
+intermediate they use.  For instance, a CA might issue intermediates in pairs,
+with an active and a standby, and reserve the right to switch to the standby
+without notice.  You probably would want to trust _both_ of those for the
+`ca_file` directive, to be prepared for such a day, and then after the first
+CA has been compromised you can remove it.  This way the roll from one CA to
+another will not break your NATS server deployment.
