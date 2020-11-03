@@ -174,6 +174,44 @@ Publishing again will continue to work after the reconnection:
 ~ # nats-pub -s "nats://nats-2:4222" hello again
 ```
 
+### Using a custom configuration file with Docker Compose
+
+Here is an example of using a custom configuration file with volumes using Docker Compose. 
+
+- First create a network and config file, for example:
+
+```sh
+docker network create nats
+
+mkdir config
+echo '
+debug = true
+trace = true
+' > config/nats.conf
+```
+
+Then point within the compose file to point to that file:
+
+```yaml
+version: "3"
+services:
+  nats:
+    image: nats
+    command: "-c /etc/nats/nats.conf --cluster nats://0.0.0.0:6222 --routes=nats://ruser:T0pS3cr3t@nats:6222"
+    volumes:
+       - ./config/:/etc/nats
+networks:
+  default:
+    external:
+      name: nats
+```
+
+Use multiple replicas by using `scale` parameter:
+
+```sh
+docker-compose -f docker-compose.yaml up --scale nats=3
+```
+
 ## Tutorial
 
 See the [NATS Docker tutorial](nats-docker-tutorial.md) for more instructions on using the NATS server Docker image.
